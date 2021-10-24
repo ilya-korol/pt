@@ -1,0 +1,106 @@
+---
+# tasks file for patroni
+
+
+- name: Add key postgres
+  apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+
+- name: add repo postgres
+  apt_repository:
+    repo: deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main
+    state: present
+    update_cache: yes
+
+- name: install postgres
+  apt:
+    name: "{{pt_pg_vers}}"
+    state: present
+  tags: pg_vers
+
+- name: enable postgres
+  service:
+    name: postgresql
+    state: stopped
+    enabled: yes
+  tags: pg_stop
+
+- name: install packages
+  apt:
+    pkg: "{{pt_packages}}"
+    state: present
+
+- name: Install and upgrade pip
+  pip:
+    name: pip
+    extra_args: --upgrade
+    executable: pip3
+    
+
+- name: Install pip packages for patroni
+  pip:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    executable: "{{ item.executable }}"
+  with_items:
+    - "{{ pt_pip_packages }}"
+
+- name: unit for systemd 
+  copy:
+    src: patroni.service
+    dest: /etc/systemd/system/patroni.service
+    owner: root
+    group: root
+    mode: '0644'
+  tags: systemd
+
+- name: create dir
+  file:
+    path: /data/
+    recurse: yes
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: 0750
+  tags: pt_data
+
+- name: create dir
+  file:
+    path: /data/patroni
+    state: directory
+    recurse: yes
+    owner: postgres
+    group: postgres
+    mode: 0750
+  tags: pt_dir
+
+- name: move config
+  template:
+    src: patroni.yml.j2
+    dest: /etc/patroni.yml
+  tags: conf
+
+- name: ls
+  tags: ls
+  command: "ls /usr/lib/postgresql/13/bin/"
+  register: dir_out
+
+
+- name: create links
+  tags: link
+  file:
+    state: link
+    src: "/usr/lib/postgresql/13/bin/{{item}}"
+    dest: "/usr/sbin/{{item}}"
+  with_items: "{{dir_out.stdout_lines}}"
+
+
+- name: start patroni
+  service:
+    name: patroni
+    state: restarted
+  tags: start
+
+
+

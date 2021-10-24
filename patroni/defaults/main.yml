@@ -1,0 +1,17 @@
+---
+# defaults file for patroni
+
+pt_packages:
+        - python3-pip 
+        - python3-dev
+        - libpq-dev
+        - python-setuptools
+
+pt_pip_packages:
+  - { name: "setuptools",    state: "latest", executable: "pip3" }
+  - { name: "patroni[etcd]", state: "present", executable: "pip3" }
+  - { name: "psycopg2", state: "present", executable: "pip3" }
+pt_pg_vers: "postgresql-13"
+pt_cluster_name: "last14"
+pt_node_name: "last14x"
+pt_etcd_list: "192.168.0.103:2379"
