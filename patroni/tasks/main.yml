@@ -13,17 +13,17 @@
     state: present
     update_cache: yes
 
-- name: install postgres
+- name: install "{{pt_psql_pg}}" 
   apt:
-    name: "{{pt_pg_vers}}"
+    name: "{{pt_psql_pg}}"
     state: present
   tags: pg_vers
 
-- name: enable postgres
+- name: disable postgres
   service:
     name: postgresql
     state: stopped
-    enabled: yes
+    enabled: no
   tags: pg_stop
 
 - name: install packages
@@ -75,32 +75,63 @@
     mode: 0750
   tags: pt_dir
 
-- name: move config
+- name: move config patroni
   template:
     src: patroni.yml.j2
     dest: /etc/patroni.yml
   tags: conf
 
-- name: ls
-  tags: ls
-  command: "ls /usr/lib/postgresql/13/bin/"
-  register: dir_out
+- name: move condig pgbouncer
+  template:
+    src: pgbouncer.ini.j2
+    dest: /etc/pgbouncer/pgbouncer.ini
+  tags: pgconf
 
+- name: move access users
+  template:
+    src: userlist.txt.j2
+    dest: /etc/pgbouncer/userlist.txt
+  tags: pguser
 
-- name: create links
-  tags: link
-  file:
-    state: link
-    src: "/usr/lib/postgresql/13/bin/{{item}}"
-    dest: "/usr/sbin/{{item}}"
-  with_items: "{{dir_out.stdout_lines}}"
-
+- name: start pgbouncer
+  service:
+    name: pgbouncer
+    state: restarted
+    enabled: yes
+  tags: pgstart 
 
 - name: start patroni
   service:
     name: patroni
     state: restarted
+    enabled: yes
   tags: start
 
+- name: install vip-ip
+  apt:
+    name: vip-manager
+    state: present
+  tags: vip
 
+- name: move vip-unit
+  template:
+    src: vip-manager.service.j2
+    dest: /lib/systemd/system/vip-manager.service
+  tags: vip-unit
+
+- name: move vip-conf
+  template:
+    src: vip-manager.yml.j2
+    dest: /etc/default/vip-manager.yml
+  tags: vip-conf
+
+- name:
+  command: systemctl daemon-reload
+
+- name: start vip
+  service:
+    name: vip-manager
+    state: restarted
+    enabled: yes
+  tags: vip-rest
 

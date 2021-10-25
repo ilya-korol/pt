@@ -1,0 +1,18 @@
+interval: 1000
+trigger-key: "/{{pt_cluster_name}}/postgres/leader"
+trigger-value: "{{pt_node_name}}"
+ip: 192.168.0.110 # the virtual ip address to manage
+netmask: 24 # netmask for the virtual ip
+interface: enp0s8 #interface to which the virtual ip will be added
+hosting-type: basic # possible values: basic, or hetzner.
+dcs-type: etcd # etcd or consul
+dcs-endpoints:
+- http://192.168.0.115:2379
+#etcd-user: "patroni"
+#etcd-password: "Julian's secret password"
+#etcd-ca-file: "/path/to/etcd/trusted/ca/file"
+#etcd-cert-file: "/path/to/etcd/client/cert/file"
+#etcd-key-file: "/path/to/etcd/client/key/file"
+retry-num: 2
+retry-after: 250 #in milliseconds
+verbose: false

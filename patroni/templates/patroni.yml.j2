@@ -24,9 +24,9 @@ bootstrap:
 
     pg_hba:
     - host replication replicator 127.0.0.1/32 md5
-    - host replication replicator 192.168.0.103/32 md5
-    - host replication replicator {{ansible_host}}/32 md5
-    - host all all 192.168.0.0/16 md5
+    - host replication replicator {{ansible_host}}/0 md5
+    - host replication replicator {{pt_sec_host}}/0 md5
+    - host all all 0.0.0.0/0 md5
 
     users:
         admin:
@@ -40,9 +40,10 @@ postgresql:
     connect_address: {{ansible_host}}:5432
     data_dir: /data/patroni
     pgpass: /tmp/pgpass
+    bin_dir: /usr/lib/postgresql/13/bin/
     authentication:
         replication:
-            username: postgres
+            username: replicator
             password: postgres
         superuser:
             username: postgres
