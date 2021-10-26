@@ -16,8 +16,29 @@ bootstrap:
         retry_timeout: {{pt_ret_to}}
         maximum_lag_on_failover: {{pt_maxlag_on_fail}}
         postgresql:
+          parameters:
             use_pg_rewind: {{pt_us_rewind}}
-
+            use_slots: {{pt_us_slot}}
+            max_connections: {{pt_max_conn}} 
+            max_locks_per_transaction: {{pt_max_lock_per_tr}}
+            max_prepared_transactions: {{pt_max_prep_trans}}
+            max_replication_slots: {{pt_max_repl_slot}}
+            max_wal_senders: {{pt_max_wal_send}}
+            max_worker_processes: {{pt_max_work_proc}} 
+            shared_buffers: {{pt_shared_buf}}            
+            effective_cache_size: {{pt_eff_cache_size}}
+            maintenance_work_mem: {{pt_main_work_mem}}
+            checkpoint_completion_target: {{pt_check_com_targ}}
+            wal_buffers: {{pt_wal_buffers}}
+            default_statistics_target: {{pt_def_stat_targ}}
+            random_page_cost: {{pt_rand_pag_cost}}
+            effective_io_concurrency: {{pt_eff_io_con}}
+            work_mem: {{pt_work_mem}}
+            min_wal_size: {{pt_min_wal_size}}
+            max_wal_size: {{pt_max_wal_size}}
+            max_parallel_workers_per_gather: {{pt_par_w_per_ga}}
+            max_parallel_workers: {{pt_par_work}}
+            max_parallel_maintenance_workers: {{pt_par_main_work}}
     initdb:
     - encoding: {{pt_encod}}
     - data-checksums
