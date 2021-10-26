@@ -1,4 +1,4 @@
-scope: postgres
+scope: {{pt_scope}}
 namespace: /{{pt_cluster_name}}/
 name: {{pt_node_name}}
 
@@ -11,29 +11,33 @@ etcd:
 
 bootstrap:
     dcs:
-        ttl: 30
-        loop_wait: 10
-        retry_timeout: 10
-        maximum_lag_on_failover: 1048576
+        ttl: {{pt_ttl}}
+        loop_wait: {{pt_loop_wait}}
+        retry_timeout: {{pt_ret_to}}
+        maximum_lag_on_failover: {{pt_maxlag_on_fail}}
         postgresql:
-            use_pg_rewind: true
+            use_pg_rewind: {{pt_us_rewind}}
 
     initdb:
-    - encoding: UTF8
+    - encoding: {{pt_encod}}
     - data-checksums
 
     pg_hba:
-    - host replication replicator 127.0.0.1/32 md5
-    - host replication replicator {{ansible_host}}/0 md5
-    - host replication replicator {{pt_sec_host}}/0 md5
-    - host all all 0.0.0.0/0 md5
+    {% for item in pt_host_repl %}
+    - host {{pt_db_repl}} {{pt_user_repl}} {{item}} md5
+    {% endfor %}
+
+    {% for item in pt_netwk_conn %}
+    - host {{pt_db_conn}} {{pt_user_conn}} {{item}} md5
+    {% endfor %}
 
     users:
-        admin:
-            password: admin
+        {{pt_admin}}:
+            password: {{pt_adm_pass}}
             options:
-                - createrole
-                - createdb
+     {% for item in pt_adm_opt %}
+         - {{item}}
+     {% endfor %}
 
 postgresql:
     listen: {{ansible_host}}:5432
@@ -43,19 +47,17 @@ postgresql:
     bin_dir: /usr/lib/postgresql/13/bin/
     authentication:
         replication:
-            username: replicator
-            password: postgres
+            username: {{pt_user_repl}}
+            password: {{pt_pass_repl}}
         superuser:
-            username: postgres
-            password: postgres
+            username: {{pt_sup_us}}
+            password: {{pt_sup_pw}}
     parameters:
-        unix_socket_directories: '.'
+        unix_socket_directories: '{{pt_sock}}'
 
 tags:
-    nofailover: false
-    noloadbalance: false
-    clonefrom: false
-    nosync: false
+    nofailover: {{pt_tg_nofailover}}
+    nosync: {{pt_tg_nosync}}
 log:
-  dir: /var/log/postgresql
-  level: INFO
+  dir: {{pt_log_dir}}
+  level: {{pt_log_lvl}}

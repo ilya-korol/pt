@@ -13,6 +13,7 @@ pt_pip_packages:
   - { name: "psycopg2", state: "present", executable: "pip3" }
 
 pt_pg_vers: "postgresql-13"
+pt_scope: "postgres"
 pt_cluster_name: "finish"
 pt_node_name: "ansible2"
 pt_etcd_list: "192.168.0.115:2379"
@@ -21,3 +22,89 @@ pt_psql_pg:
   - "{{pt_pg_vers}}"
   - pgbouncer
 
+#bootstrap_dcs
+pt_ttl: "30"
+pt_loop_wait: "10"
+pt_ret_to: "10"
+pt_maxlag_on_fail: "1048576"
+pt_us_rewind: "true"
+
+#bootstrap_initdb
+pt_encod: "UTF8"
+
+#bootstartp_pg_hba
+pt_user_repl: "replicator"
+pt_db_repl: "replication"
+pt_host_repl:
+        - "127.0.0.1/32"
+        - "{{ansible_host}}/32"
+        - "{{pt_sec_host}}/32"
+
+pt_pass_repl: "postgres"
+
+pt_user_conn: "all"
+pt_db_conn: "all"
+pt_netwk_conn:
+        - "172.27.0.0/16"
+        - "172.19.0.0/16" 
+        - "89.113.16.0/24"
+        - "192.168.0.0/24"
+
+#bootstrap_users
+pt_admin: "admin"
+pt_adm_pass: "admin"
+pt_adm_opt:
+        - "createrole"
+        - "creatdb"
+
+#postgresql:
+pt_data_dir: "/data/patroni"
+pt_pgpass: "/tmp/pgpass"
+bin_dir: "/usr/lib/postgresql/13/bin/"
+
+#postgresql_auth_superuser
+pt_sup_us: "postgres"
+pt_sup_pw: "postgres"
+
+#postgresql_sock
+pt_sock: "."
+
+#patroni_tags
+pt_tg_nofailover: "false"
+pt_tg_nosync: "false"
+
+#patroni_log
+pt_log_dir: "/var/log/postgresql"
+pt_log_lvl: "INFO"
+
+pt_ip_interva: "1000"
+pt_ip_ip: "192.168.0.110"
+pt_ip_msk: "24"
+pt_ip_if: "enp0s8"
+pt_ip_type: "basic"
+pt_ip_dcs: "etcd"
+pt_ip_etcd:
+       - "192.168.0.115:2379"
+
+pt_ip_rt_num: "2"
+pt_ip_rt_aft: "250"
+pt_ip_vbs: "false"
+
+
+pt_pg_usr: "/etc/pgbouncer/userlist.txt"
+pt_pg_tepe: "md5"
+pt_pg_pool: "256"
+pt_pg_idle_to: "60"
+pt_pg_adrs: "0.0.0.0"
+pt_pg_port: "6432"
+pt_pg_log_con: "0"
+pt_pg_log_dcon: "0"
+pt_pg_pool_err: "1"
+pt_pg_log_file: "/var/log/postgresql/pgbouncer.log"
+pt_pg_max_conn: "1000"
+pt_pg_pid: "/var/run/postgresql/pgbouncer.pid"
+pt_pg_pool_mode: "session"
+pt_pg_chck_delay: "0"
+pt_pg_chck_query: "select 1"
+pt_pg_rest_query: "DISCARD ALL;"
+pt_pg_un_sock: "/var/run/postgresqlq"
