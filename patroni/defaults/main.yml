@@ -6,6 +6,7 @@ pt_packages:
         - python3-dev
         - libpq-dev
         - python-setuptools
+        - pgbouncer
 
 pt_pip_packages:
   - { name: "setuptools",    state: "latest", executable: "pip3" }
@@ -14,13 +15,10 @@ pt_pip_packages:
 
 pt_pg_vers: "postgresql-13"
 pt_scope: "postgres"
-pt_cluster_name: "finish"
+pt_cluster_name: "finish2"
 pt_node_name: "ansible2"
 pt_etcd_list: "192.168.0.115:2379"
 pt_sec_host: "192.168.0.112"
-pt_psql_pg: 
-  - "{{pt_pg_vers}}"
-  - pgbouncer
 
 #bootstrap_dcs
 pt_ttl: "30"

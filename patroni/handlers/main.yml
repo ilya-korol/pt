@@ -1,2 +1,31 @@
 ---
 # handlers file for patroni
+
+- name: disable postgres
+  service:
+     name: postgres
+     state: disabled
+     enabled: no
+
+- name: pgbouncer
+  service:
+     name: pgbouncer
+     state: reloaded
+     enabled: yes
+
+
+- name: state patroni
+  service:
+     name: patroni
+     state: started
+     enabled: yes
+
+
+- name: daemon reload
+  command: systemctl daemon-reload
+
+- name: vip restart
+  service:
+     name: vip-manager
+     state: restarted
+     enabled: yes

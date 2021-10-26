@@ -1,7 +1,6 @@
 ---
 # tasks file for patroni
 
-
 - name: Add key postgres
   apt_key:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
@@ -13,18 +12,14 @@
     state: present
     update_cache: yes
 
-- name: install "{{pt_psql_pg}}" 
+- name: install "{{pt_pg_vers}}" 
   apt:
-    name: "{{pt_psql_pg}}"
+    name: "{{pt_pg_vers}}"
     state: present
+  notify:
+     - disable postgres
   tags: pg_vers
 
-- name: disable postgres
-  service:
-    name: postgresql
-    state: stopped
-    enabled: no
-  tags: pg_stop
 
 - name: install packages
   apt:
@@ -79,33 +74,26 @@
   template:
     src: patroni.yml.j2
     dest: /etc/patroni.yml
+  notify: 
+    - state patroni
   tags: conf
 
-- name: move condig pgbouncer
-  template:
-    src: pgbouncer.ini.j2
-    dest: /etc/pgbouncer/pgbouncer.ini
-  tags: pgconf
+- name: block bpbouncer
+  block:
+    - name: move condig pgbouncer
+      template:
+        src: pgbouncer.ini.j2
+        dest: /etc/pgbouncer/pgbouncer.ini
+      tags: pgconf
 
-- name: move access users
-  template:
-    src: userlist.txt.j2
-    dest: /etc/pgbouncer/userlist.txt
-  tags: pguser
-
-- name: start pgbouncer
-  service:
-    name: pgbouncer
-    state: restarted
-    enabled: yes
-  tags: pgstart 
-
-- name: start patroni
-  service:
-    name: patroni
-    state: restarted
-    enabled: yes
-  tags: start
+    - name: move access users
+      template:
+        src: userlist.txt.j2
+        dest: /etc/pgbouncer/userlist.txt
+      tags: pguser
+  notify:
+     - bgbouncer 
+  tags: suka
 
 - name: install vip-ip
   apt:
@@ -118,20 +106,14 @@
     src: vip-manager.service.j2
     dest: /lib/systemd/system/vip-manager.service
   tags: vip-unit
+  notify:
+     - daemon reload
 
 - name: move vip-conf
   template:
     src: vip-manager.yml.j2
     dest: /etc/default/vip-manager.yml
   tags: vip-conf
-
-- name:
-  command: systemctl daemon-reload
-
-- name: start vip
-  service:
-    name: vip-manager
-    state: restarted
-    enabled: yes
-  tags: vip-rest
+  notify:
+     - vip restart
 
