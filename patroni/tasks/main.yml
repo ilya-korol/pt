@@ -16,10 +16,13 @@
   apt:
     name: "{{pt_pg_vers}}"
     state: present
-  notify:
-     - disable postgres
   tags: pg_vers
 
+- name: stop postgresql
+  service:
+    name: postgresql 
+    state: stopped
+    enabled: no
 
 - name: install packages
   apt:
@@ -70,29 +73,13 @@
     mode: 0750
   tags: pt_dir
 
-- name: move config patroni
+- name: move config pgbouncer
   template:
-    src: patroni.yml.j2
-    dest: /etc/patroni.yml
-  notify: 
-    - state patroni
-  tags: conf
-
-- name: block bpbouncer
-  block:
-    - name: move condig pgbouncer
-      template:
-        src: pgbouncer.ini.j2
-        dest: /etc/pgbouncer/pgbouncer.ini
-      tags: pgconf
-
-    - name: move access users
-      template:
-        src: userlist.txt.j2
-        dest: /etc/pgbouncer/userlist.txt
-      tags: pguser
+    src: pgbouncer.ini.j2
+    dest: /etc/pgbouncer/pgbouncer.ini
+  tags: pgconf
   notify:
-     - bgbouncer 
+     - restart pgbouncer
   tags: suka
 
 - name: install vip-ip
@@ -115,5 +102,12 @@
     dest: /etc/default/vip-manager.yml
   tags: vip-conf
   notify:
-     - vip restart
+      - vip start
 
+- name: move config patroni
+  template:
+    src: patroni.yml.j2
+    dest: /etc/patroni.yml
+  notify: 
+     - restart patroni
+  tags: conf

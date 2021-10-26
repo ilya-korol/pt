@@ -15,10 +15,10 @@ pt_pip_packages:
 
 pt_pg_vers: "postgresql-13"
 pt_scope: "postgres"
-pt_cluster_name: "finish2"
-pt_node_name: "ansible2"
+pt_cluster_name: "xxx"
+pt_node_name: "ansible1"
 pt_etcd_list: "192.168.0.115:2379"
-pt_sec_host: "192.168.0.112"
+pt_sec_host: "192.168.0.116"
 
 #bootstrap_dcs
 pt_ttl: "30"

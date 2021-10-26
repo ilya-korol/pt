@@ -31,14 +31,6 @@ bootstrap:
     - host {{pt_db_conn}} {{pt_user_conn}} {{item}} md5
     {% endfor %}
 
-    users:
-        {{pt_admin}}:
-            password: {{pt_adm_pass}}
-            options:
-     {% for item in pt_adm_opt %}
-         - {{item}}
-     {% endfor %}
-
 postgresql:
     listen: {{ansible_host}}:5432
     connect_address: {{ansible_host}}:5432
@@ -61,3 +53,4 @@ tags:
 log:
   dir: {{pt_log_dir}}
   level: {{pt_log_lvl}}
+#
