@@ -15,10 +15,10 @@ pt_pip_packages:
 
 pt_pg_vers: "postgresql-13"
 pt_scope: "postgres"
-pt_cluster_name: "xxx"
-pt_node_name: "ansible1"
+pt_cluster_name: "zzz"
+pt_node_name: "ansible2"
 pt_etcd_list: "192.168.0.115:2379"
-pt_sec_host: "192.168.0.116"
+pt_sec_host: "192.168.0.112"
 
 #bootstrap_dcs
 pt_ttl: "30"
@@ -48,12 +48,6 @@ pt_netwk_conn:
         - "89.113.16.0/24"
         - "192.168.0.0/24"
 
-#bootstrap_users
-pt_admin: "admin"
-pt_adm_pass: "admin"
-pt_adm_opt:
-        - "createrole"
-        - "creatdb"
 
 #postgresql:
 pt_data_dir: "/data/patroni"

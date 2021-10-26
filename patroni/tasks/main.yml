@@ -126,7 +126,6 @@
 - name: crontab
   cron:
     name: pass for pg
-    minute: "1"
-    hour: "0-23"
+    minute: "*/5"
     job: '/usr/bin/ath.py /etc/pgbouncer/userlist.txt "dbname=template1 user=postgres" && chown postgres:postgres /etc/pgbouncer/userlist.txt'
     user: root
