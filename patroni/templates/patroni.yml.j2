@@ -57,11 +57,11 @@ postgresql:
     connect_address: {{ansible_host}}:5432
     data_dir: /data/patroni
     pgpass: /tmp/pgpass
-    bin_dir: /usr/lib/postgresql/13/bin/
+    bin_dir: /usr/lib/postgresql/{{pt_pg_vers}}/bin/
     authentication:
         replication:
             username: {{pt_user_repl}}
-            password: {{pt_pass_repl}}
+            password: {{pt_sup_pw}}
         superuser:
             username: {{pt_sup_us}}
             password: {{pt_sup_pw}}

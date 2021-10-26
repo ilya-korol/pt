@@ -14,7 +14,7 @@
 
 - name: install "{{pt_pg_vers}}" 
   apt:
-    name: "{{pt_pg_vers}}"
+    name: "{{pt_pg_inst}}"
     state: present
   tags: pg_vers
 

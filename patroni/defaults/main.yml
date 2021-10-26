@@ -1,6 +1,5 @@
 ---
 # defaults file for patroni
-
 pt_packages:
         - python3-pip 
         - python3-dev
@@ -13,7 +12,8 @@ pt_pip_packages:
   - { name: "patroni[etcd]", state: "present", executable: "pip3" }
   - { name: "psycopg2", state: "present", executable: "pip3" }
 
-pt_pg_vers: "postgresql-13"
+pt_pg_inst: "postgresql-{{pt_pg_vers}}"
+pt_pg_vers: 13
 pt_scope: "postgres"
 pt_cluster_name: "bbb"
 pt_node_name: "ansible2"
@@ -59,9 +59,7 @@ pt_host_repl:
         - "127.0.0.1/32"
         - "{{ansible_host}}/32"
         - "{{pt_sec_host}}/32"
-
-pt_pass_repl: "postgres"
-
+ 
 pt_user_conn: "all"
 pt_db_conn: "all"
 pt_netwk_conn:
@@ -80,7 +78,13 @@ pt_post_list: "0.0.0.0"
 
 #postgresql_auth_superuser
 pt_sup_us: "postgres"
-pt_sup_pw: "postgres"
+pt_sup_pw: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          39373038623863653164386438306436376335613662343639636566393065396335386631373762
+          3465313666643135333961623233396162623066323166320a636161356336363935326161393538
+          36386164356539393863366637383961633333643863666262643762336361666264313130316262
+          6434326264306539330a313438646465353866326561393431396639346539336336363238363532
+          6334
 
 #postgresql_sock
 pt_sock: "/var/run/postgresql/"
@@ -93,6 +97,7 @@ pt_tg_nosync: "false"
 pt_log_dir: "/var/log/postgresql"
 pt_log_lvl: "INFO"
 
+#virtual_ip_set
 pt_ip_interva: "1000"
 pt_ip_ip: "192.168.0.110"
 pt_ip_msk: "24"
@@ -106,7 +111,7 @@ pt_ip_rt_num: "2"
 pt_ip_rt_aft: "250"
 pt_ip_vbs: "false"
 
-
+#pgbouncer set
 pt_pg_usr: "/etc/pgbouncer/userlist.txt"
 pt_pg_tepe: "md5"
 pt_pg_pool: "256"
