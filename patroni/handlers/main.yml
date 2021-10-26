@@ -1,11 +1,6 @@
 ---
 # handlers file for patroni
 
-#- name: disable postgres
-#  service:
-#     name: postgresql
-#     state: stopped
-#     enabled: no
 
 - name: restart pgbouncer
   service:

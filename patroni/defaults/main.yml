@@ -60,12 +60,14 @@ pt_data_dir: "/data/patroni"
 pt_pgpass: "/tmp/pgpass"
 bin_dir: "/usr/lib/postgresql/13/bin/"
 
+pt_post_list: "0.0.0.0"
+
 #postgresql_auth_superuser
 pt_sup_us: "postgres"
 pt_sup_pw: "postgres"
 
 #postgresql_sock
-pt_sock: "."
+pt_sock: "/var/run/postgresql/"
 
 #patroni_tags
 pt_tg_nofailover: "false"
@@ -105,4 +107,4 @@ pt_pg_pool_mode: "session"
 pt_pg_chck_delay: "0"
 pt_pg_chck_query: "select 1"
 pt_pg_rest_query: "DISCARD ALL;"
-pt_pg_un_sock: "/var/run/postgresqlq"
+pt_pg_un_sock: "/var/run/postgresql"

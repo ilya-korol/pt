@@ -73,6 +73,14 @@
     mode: 0750
   tags: pt_dir
 
+- name: copy ath.py
+  copy:
+    src: ath.py
+    dest: /usr/bin/ath.py
+    owner: root
+    group: root
+    mode: uo+x
+
 - name: move config pgbouncer
   template:
     src: pgbouncer.ini.j2
@@ -89,9 +97,12 @@
   tags: vip
 
 - name: move vip-unit
-  template:
-    src: vip-manager.service.j2
+  copy:
+    src: vip-manager.service
     dest: /lib/systemd/system/vip-manager.service
+    owner: root
+    group: root
+    mode: '0644'
   tags: vip-unit
   notify:
      - daemon reload
@@ -111,3 +122,11 @@
   notify: 
      - restart patroni
   tags: conf
+
+- name: crontab
+  cron:
+    name: pass for pg
+    minute: "1"
+    hour: "0-23"
+    job: '/usr/bin/ath.py /etc/pgbouncer/userlist.txt "dbname=template1 user=postgres" && chown postgres:postgres /etc/pgbouncer/userlist.txt'
+    user: root

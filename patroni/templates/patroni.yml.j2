@@ -32,8 +32,8 @@ bootstrap:
     {% endfor %}
 
 postgresql:
-    listen: {{ansible_host}}:5432
-    connect_address: {{ansible_host}}:5432
+    listen: {{pt_post_list}}:5432
+    connect_address: {{pt_post_list}}:5432
     data_dir: /data/patroni
     pgpass: /tmp/pgpass
     bin_dir: /usr/lib/postgresql/13/bin/
