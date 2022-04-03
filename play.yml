@@ -1,4 +1,4 @@
-
+###
 ---
 - name: patroni
   hosts: all
